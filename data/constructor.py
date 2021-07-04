@@ -16,6 +16,7 @@ from var import *
 
 var2func = {
     'motion_blur': motion_blur,
+    'fog': fog,
 }
 
 
@@ -52,7 +53,7 @@ def process_single_clip(i, o, args):
         if x.endswith('.jpg') or x.endswith('.png'):
             img_list.append(x)
         else:
-            process_single_clip(i / x, o / x, mode_func, var_func)
+            process_single_clip(i / x, o / x, args)
     img_list.sort()
     series = get_severity(len(img_list), args)
     var_func = var2func[args.var]
@@ -67,15 +68,15 @@ def process_single_clip(i, o, args):
 def main():
     args = parseargs()
     if args.output_path is None:
-        output_path = input_path.rstrip('/') + '.' + args.var + '.' + args.mode
+        output_path = args.input_path.rstrip('/') + '.' + args.var + '.' + args.mode
         if args.mode == 'consistent':
             output_path += '_' + str(args.severity)
         elif args.mode == 'random':
-            output_path += '_' + args.max_pos_count + '_' + args.max_frame_count
+            output_path += '_' + str(args.max_pos_count) + '_' + str(args.max_frame_count)
         elif args.mode == 'smooth':
-            output_path += '_' + args.max_level
+            output_path += '_' + str(args.max_level)
         elif args.mode == 'burst':
-            output_path = '_' + args.order + '_' + args.severity + '_' + args.burst_pos
+            output_path = '_' + str(args.order) + '_' + str(args.severity) + '_' + str(args.burst_pos)
     else:
         output_path = args.output_path
     input_path = Path(args.input_path)

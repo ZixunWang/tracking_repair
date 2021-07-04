@@ -9,6 +9,7 @@ import os
 import random as pyrandom
 import numpy as np
 
+
 def consistent(clip_length:int, severity:int):
     severity_sequence = np.full(clip_length, severity).astype(np.int32)
     return severity_sequence 
@@ -65,16 +66,25 @@ def burst(clip_length:int, order:str, severity:int, burst_pos=None):
     else:
         raise ValueError(f'Invalid order argument: {order}')
 
+
+mode2func = {
+    'consistent': consistent,
+    'random': random,
+    'smooth': smooth,
+    'burst': burst,
+}
+
+
 def get_severity(clip_length, args):
     """Get severity sequence for target clip.
     """
     if args.mode.lower() == 'consistent':
-        locals()[args.mode](clip_length, args.severity)
+        return mode2func[args.mode](clip_length, args.severity)
     elif args.mode.lower() == 'random':
-        locals()[args.mode](clip_length, args.max_pos_count, args.max_frame_count)
+        return mode2func[args.mode](clip_length, args.max_pos_count, args.max_frame_count)
     elif args.mode.lower() == 'smooth':
-        locals()[args.mode](clip_length, args.order, args.max_level)
+        return mode2func[args.mode](clip_length, args.order, args.max_level)
     elif args.mode.lower() == 'burst':
-        locals()[args.mode](clip_length, args.order, args.severity, args.burst_pos)
+        return mode2func[args.mode](clip_length, args.order, args.severity, args.burst_pos)
     else:
         raise ValueError(f'Invalid mode: {args.mode}')
