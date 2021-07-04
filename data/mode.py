@@ -29,7 +29,7 @@ def random(clip_length:int, max_pos_count:int, max_frame_count:int):
     return severity_sequence
 
 
-def smooth(clip_length:int, max_level:int):
+def smooth(clip_length:int, order: str, max_level:int):
     severity_sequence = np.zeros(clip_length).astype(np.int32)
     if max_level > clip_length:
         raise Exception(f'Unsupport severity level: {max_level}')
@@ -41,7 +41,12 @@ def smooth(clip_length:int, max_level:int):
         else:
             severity_sequence[i*part_length:(i+1)*part_length] = i
 
-    return severity_sequence
+    if order=='ascending':
+        return severity_sequence
+    elif order=='descending':
+        return np.flip(severity_sequence)
+    else:
+        raise ValueError(f'Invalid order argument: {order}')
 
 
 def burst(clip_length:int, order:str, severity:int, burst_pos=None):
@@ -68,7 +73,7 @@ def get_severity(clip_length, args):
     elif args.mode.lower() == 'random':
         locals()[args.mode](clip_length, args.max_pos_count, args.max_frame_count)
     elif args.mode.lower() == 'smooth':
-        locals()[args.mode](clip_length, args.max_level)
+        locals()[args.mode](clip_length, args.order, args.max_level)
     elif args.mode.lower() == 'burst':
         locals()[args.mode](clip_length, args.order, args.severity, args.burst_pos)
     else:

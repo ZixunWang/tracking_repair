@@ -44,12 +44,15 @@ def load_network(network_dir=None, checkpoint=None, constructor_fun_name=None, c
 
     The extra keyword arguments are supplied to the network constructor to replace saved ones.
     """
+
     if network_dir is not None:
         net_path = Path(network_dir)
     else:
         net_path = None
+
     if net_path is not None and net_path.is_file():
         checkpoint = str(net_path)
+
     if checkpoint is None:
         # Load most recent checkpoint
         checkpoint_list = sorted(net_path.glob('*.pth.tar'))
