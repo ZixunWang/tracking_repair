@@ -21,11 +21,19 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict, perturb_
 
     frame_names = [os.path.splitext(os.path.basename(f))[0] for f in seq.frames]
 
+    # ==== update ====
+    def check_exist(file):
+        file = os.path.abspath(file)
+        parent = file[:file.rfind('/')]
+        if not os.path.exists(parent):
+            os.makedirs(parent)
     def save_bb(file, data):
+        check_exist(file)
         tracked_bb = np.array(data).astype(int)
         np.savetxt(file, tracked_bb, delimiter='\t', fmt='%d')
 
     def save_time(file, data):
+        check_exist(file)
         exec_times = np.array(data).astype(float)
         np.savetxt(file, exec_times, delimiter='\t', fmt='%f')
 
