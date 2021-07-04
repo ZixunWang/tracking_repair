@@ -25,12 +25,12 @@ def parseargs():
     parser.add_argument('-o', '--output_path', type=str, help='where to store the new dataset')
     parser.add_argument('-m', '--mode', type=str, help='time series mode [consisten|burst|random|smooth]')
     parser.add_argument('-v', '--var', type=str, help='corruption or perturbation type')
-    parser.add_argument('--severity', type=int, default=1, help='severity of perturbation')
-    parser.add_argument('--max_pos_count', type=int, default=1)
-    parser.add_argument('--max_frame_count', type=int, default=1)
-    parser.add_argument('--max_level', type=int, default=1)
-    parser.add_argument('--order', type=str, default='ascending')
-    parser.add_argument('--burst_pos', type=int, default=None)
+    parser.add_argument('--severity', type=int, default=1, help='severity of consistent and burst perturbation mode')
+    parser.add_argument('--max_pos_count', type=int, default=1, help='maximum count of position to perturb in random mode')
+    parser.add_argument('--max_frame_count', type=int, default=1, help='maximum count of frame at a position to perturb in random mode')
+    parser.add_argument('--max_level', type=int, default=1, help='the maximum level of severity in smooth mode')
+    parser.add_argument('--order', type=str, default='ascending', help='the trending of smooth and burst mode, [ascending|descending]')
+    parser.add_argument('--burst_pos', type=int, default=None, help='where the severity is suddenly changed')
     args = parser.parse_args()
     return args
 

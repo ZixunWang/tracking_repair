@@ -1,6 +1,0 @@
-[submodule "tracking/pytracking"]
-	path = tracking/pytracking
-	url = https://github.com/visionml/pytracking
-[submodule "_refer/imageNet-CP"]
-	path = _refer/imageNet-CP
-	url = https://github.com/hendrycks/robustness.git
