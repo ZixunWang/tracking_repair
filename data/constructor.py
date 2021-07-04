@@ -74,7 +74,7 @@ def main():
         elif args.mode == 'random':
             output_path += '_' + str(args.max_pos_count) + '_' + str(args.max_frame_count)
         elif args.mode == 'smooth':
-            output_path += '_' + str(args.max_level)
+            output_path += '_' + str(args.order) + '_' + str(args.max_level)
         elif args.mode == 'burst':
             output_path = '_' + str(args.order) + '_' + str(args.severity) + '_' + str(args.burst_pos)
     else:
