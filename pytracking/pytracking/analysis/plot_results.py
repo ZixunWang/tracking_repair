@@ -5,9 +5,12 @@ import os
 import torch
 import pickle
 import json
-from pytracking.evaluation.environment import env_settings
-from pytracking.analysis.extract_results import extract_results
-
+# from pytracking.evaluation.environment import env_settings
+# from pytracking.analysis.extract_results import extract_results
+import sys
+sys.path.append(os.path.join(os.getcwd(), '..'))
+from evaluation.environment import env_settings
+from analysis.extract_results import extract_results
 
 def get_plot_draw_styles():
     plot_draw_style = [{'color': (1.0, 0.0, 0.0), 'line_style': '-'},
@@ -164,17 +167,16 @@ def check_and_load_precomputed_results(trackers, dataset, report_name, force_eva
     # Load pre-computed results
     result_plot_path = os.path.join(settings.result_plot_path, report_name)
     eval_data_path = os.path.join(result_plot_path, 'eval_data.pkl')
-
     if os.path.isfile(eval_data_path) and not force_evaluation:
         with open(eval_data_path, 'rb') as fh:
             eval_data = pickle.load(fh)
     else:
         # print('Pre-computed evaluation data not found. Computing results!')
-        eval_data = extract_results(trackers, dataset, report_name, **kwargs)
+        eval_data = extract_results(trackers, dataset, report_name, kwargs)
 
     if not check_eval_data_is_valid(eval_data, trackers, dataset):
         # print('Pre-computed evaluation data invalid. Re-computing results!')
-        eval_data = extract_results(trackers, dataset, report_name, **kwargs)
+        eval_data = extract_results(trackers, dataset, report_name, kwargs)
     else:
         # Update display names
         tracker_names = [{'name': t.name, 'param': t.parameter_name, 'run_id': t.run_id, 'disp_name': t.display_name}

@@ -83,7 +83,6 @@ class GOT10KDataset(BaseDataset):
         else:
             self.base_path = os.path.join(self.env_settings.got10k_path, 'train')
 
-        print(self.base_path)
         self.sequence_list = self._get_sequence_list(kwargs['split'])
         self.split = kwargs['split']
 

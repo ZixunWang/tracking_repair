@@ -101,7 +101,7 @@ def calc_seq_err_robust(pred_bb, anno_bb, dataset, target_visible=None):
 
 
 def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot_bin_gap=0.05,
-                    exclude_invalid_frames=False):
+                    exclude_invalid_frames=False, **kwargs):
     settings = env_settings()
     eps = 1e-16
 
@@ -130,7 +130,11 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
         target_visible = torch.tensor(seq.target_visible, dtype=torch.uint8) if seq.target_visible is not None else None
         for trk_id, trk in enumerate(trackers):
             # Load results
-            base_results_path = '{}/{}'.format(trk.results_dir, seq.name)
+            # base_results_path = '{}/{}'.format(trk.results_dir, seq.name)
+            base_results_path = os.path.join(trk.results_dir, seq.name)
+            # perturb suffix
+            if 'suffix' in kwargs:
+                base_results_path = os.path.join(base_results_path, kwargs['suffix'])
             results_path = '{}.txt'.format(base_results_path)
 
             if os.path.isfile(results_path):
