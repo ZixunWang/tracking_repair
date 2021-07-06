@@ -58,6 +58,7 @@ def main():
     parser.add_argument('--visdom_port', type=int, default=8097, help='Port for visdom.')
 
     #! change for purpose
+    parser.add_argument('--perturb', action='store_true', help='whether test perturbed dataset')
     parser.add_argument('--mode', type=str, help='time series mode [consisten|burst|random|smooth]')
     parser.add_argument('--var', type=str, help='corruption or perturbation type')
     parser.add_argument('--severity', type=int, default=1, help='severity of consistent and burst perturbation mode')
@@ -81,6 +82,7 @@ def main():
     }
 
     perturb_info = {
+        'perturb_on': args.perturb,
         'mode':args.mode,
         'variable':args.var,
         'setting': {

@@ -74,7 +74,7 @@ class GOT10KDataset(BaseDataset):
         # Split can be test, val, or ltrval (a validation split consisting of videos from the official train set)
         if kwargs['split'] == 'test':
             # check perturbation
-            if not kwargs['perturbation']:
+            if not kwargs['perturbation']['perturb_on']:
                 self.base_path = os.path.join(self.env_settings.got10k_path, 'test')
             else:
                 self.base_path = os.path.join(self.env_settings.got10k_path, 'test.{}'.format(construct_suffix(kwargs['perturbation'])))
