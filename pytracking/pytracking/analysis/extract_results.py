@@ -102,13 +102,8 @@ def calc_seq_err_robust(pred_bb, anno_bb, dataset, target_visible=None):
 
 def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot_bin_gap=0.05,
                     exclude_invalid_frames=False, **kwargs):
-    settings = env_settings()
     eps = 1e-16
 
-    result_plot_path = os.path.join(settings.result_plot_path, report_name)
-
-    if not os.path.exists(result_plot_path):
-        os.makedirs(result_plot_path)
 
     threshold_set_overlap = torch.arange(0.0, 1.0 + plot_bin_gap, plot_bin_gap, dtype=torch.float64)
     threshold_set_center = torch.arange(0, 51, dtype=torch.float64)
@@ -130,11 +125,10 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
         target_visible = torch.tensor(seq.target_visible, dtype=torch.uint8) if seq.target_visible is not None else None
         for trk_id, trk in enumerate(trackers):
             # Load results
-            # base_results_path = '{}/{}'.format(trk.results_dir, seq.name)
-            base_results_path = os.path.join(trk.results_dir, seq.name)
-            # perturb suffix
             if 'suffix' in kwargs:
-                base_results_path = os.path.join(base_results_path, kwargs['suffix'])
+                base_results_path = '{}/{}_{}'.format(trk.results_dir, seq.dataset, kwargs['suffix'], seq.name)
+            else:
+                base_results_path = '{}/{}_{}'.format(trk.results_dir, seq.dataset, seq.name)
             results_path = '{}.txt'.format(base_results_path)
 
             if os.path.isfile(results_path):
@@ -180,6 +174,15 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
                  'threshold_set_overlap': threshold_set_overlap.tolist(),
                  'threshold_set_center': threshold_set_center.tolist(),
                  'threshold_set_center_norm': threshold_set_center_norm.tolist()}
+
+    settings = env_settings()
+
+    if 'suffix' in kwargs:
+        result_plot_path = os.path.join(settings.result_plot_path, kwargs['suffix'], report_name)
+    else:
+        result_plot_path = os.path.join(settings.result_plot_path, report_name)
+    if not os.path.exists(result_plot_path):
+        os.makedirs(result_plot_path)
 
     with open(result_plot_path + '/eval_data.pkl', 'wb') as fh:
         pickle.dump(eval_data, fh)

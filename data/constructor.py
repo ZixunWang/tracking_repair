@@ -81,6 +81,9 @@ def main():
         output_path = args.output_path
     input_path = Path(args.input_path)
     output_path = Path(output_path)
+    if not output_path.exists():
+        print('fmake dir: {output_path}')
+        output_path.mkdir()
     print('construction begins...')
     process_single_clip(input_path, output_path, args)
     print('construction is done')

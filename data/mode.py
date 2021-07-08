@@ -29,7 +29,6 @@ def random(clip_length:int, max_pos_count:int, max_frame_count:int):
 
     return severity_sequence
 
-
 def smooth(clip_length:int, order: str, max_level:int):
     severity_sequence = np.zeros(clip_length).astype(np.int32)
     if max_level > clip_length:
@@ -49,15 +48,19 @@ def smooth(clip_length:int, order: str, max_level:int):
     else:
         raise ValueError(f'Invalid order argument: {order}')
 
-
-def burst(clip_length:int, order:str, severity:int, burst_pos=None):
+def burst(clip_length:int, order:str, severity:int, burst_pos: int = None):
     severity_sequence = np.zeros(clip_length).astype(np.int32)
     if burst_pos == None:
         burst_pos = pyrandom.randint(0,clip_length-1)
-    if severity != 0:
+    elif burst_pos >= clip_length or burst_pos < 0:
+        burst_pos = pyrandom.randint(0,clip_length-1)
+        print(f"Invalid burst frame postion, randomly initialized: {burst_pos}")
+
+    if 0 < severity < 5:
         severity_sequence[burst_pos:] = severity
     else:
         severity_sequence[burst_pos:] = pyrandom.randint(1,5) # randomly set severity
+        print(f"Invalid burst severity, randomly initialized: {burst_pos}")
 
     if order=='ascending':
         return severity_sequence

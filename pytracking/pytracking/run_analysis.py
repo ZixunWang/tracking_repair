@@ -34,7 +34,7 @@ def example():
 
 
 def example_normal():
-    trackers = [Tracker('dimp', 'dimp50')]
+    trackers = [Tracker('dimp', 'dimp18')]
     dataset = get_dataset('got10k_test')
     plot_results(trackers, dataset, 'example_normal_report')
 

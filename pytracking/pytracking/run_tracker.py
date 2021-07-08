@@ -1,5 +1,4 @@
 import os
-# from projects.tracking_repair.pytracking.pytracking.evaluation.datasets import get_perturb_dataset
 import sys
 import argparse
 
@@ -31,7 +30,7 @@ def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', se
     visdom_info = {} if visdom_info is None else visdom_info
     perturb_info = {} if perturb_info is None else perturb_info
 
-    if not perturb_info:
+    if not perturb_info['perturb_on']:
         dataset = get_dataset(dataset_name)
     else:
         dataset = get_perturb_dataset(perturb_info, dataset_name)
