@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import time
+import logging
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -18,7 +19,9 @@ var2func = {
     'motion_blur': motion_blur,
     'fog': fog,
 }
-
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(message)s',
+                    datefmt='%a %d %b %Y %H:%M:%S')
 
 def parseargs():
     parser = argparse.ArgumentParser()
@@ -55,10 +58,13 @@ def process_single_clip(i, o, args):
         else:
             process_single_clip(i / x, o / x, args)
     img_list.sort()
+    img_list = list(filter(lambda x: not (o / x).exists(), img_list)) # resume
+    if len(img_list) == 0:
+        return 
     series = get_severity(len(img_list), args)
     var_func = var2func[args.var]
     tasks = [(i / img_list[k], o / img_list[k], var_func, series[k]) for k in range(len(img_list))]
-    print(f'processing {i}...')
+    logging.info(f'processing {i}...')
     pool = Pool(10)
     pool.starmap(process_single_image, tasks)
     pool.close()
@@ -76,19 +82,19 @@ def main():
         elif args.mode == 'smooth':
             output_path += '_' + str(args.order) + '_' + str(args.max_level)
         elif args.mode == 'burst':
-            output_path = '_' + str(args.order) + '_' + str(args.severity) + '_' + str(args.burst_pos)
+            output_path += '_' + str(args.order) + '_' + str(args.severity) + '_' + str(args.burst_pos)
     else:
         output_path = args.output_path
     input_path = Path(args.input_path)
     output_path = Path(output_path)
     if not output_path.exists():
-        print('fmake dir: {output_path}')
+        logging.info(f'make dir: {output_path}')
         output_path.mkdir()
-    print('construction begins...')
+    logging.info('construction begins...')
     process_single_clip(input_path, output_path, args)
-    print('construction is done')
+    logging.info('construction is done')
 
 if __name__ == '__main__':
     start = time.time()
     main()
-    print(f'time consuming: {time.time()-start}')
+    logging.info(f'time consuming: {time.time()-start}')

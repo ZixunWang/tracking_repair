@@ -172,11 +172,11 @@ def check_and_load_precomputed_results(trackers, dataset, report_name, force_eva
             eval_data = pickle.load(fh)
     else:
         # print('Pre-computed evaluation data not found. Computing results!')
-        eval_data = extract_results(trackers, dataset, report_name, kwargs)
+        eval_data = extract_results(trackers, dataset, report_name, **kwargs)
 
     if not check_eval_data_is_valid(eval_data, trackers, dataset):
         # print('Pre-computed evaluation data invalid. Re-computing results!')
-        eval_data = extract_results(trackers, dataset, report_name, kwargs)
+        eval_data = extract_results(trackers, dataset, report_name, **kwargs)
     else:
         # Update display names
         tracker_names = [{'name': t.name, 'param': t.parameter_name, 'run_id': t.run_id, 'disp_name': t.display_name}

@@ -30,7 +30,7 @@ def example():
     }
     suffix = construct_suffix(perturb_info)
     dataset = get_perturb_dataset(perturb_info, 'got10k_test')
-    plot_results(trackers, dataset, 'example_report', suffix=suffix)
+    plot_results(trackers, dataset, 'test.'+suffix, suffix='test.'+suffix)
 
 
 def example_normal():

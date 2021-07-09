@@ -104,7 +104,6 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
                     exclude_invalid_frames=False, **kwargs):
     eps = 1e-16
 
-
     threshold_set_overlap = torch.arange(0.0, 1.0 + plot_bin_gap, plot_bin_gap, dtype=torch.float64)
     threshold_set_center = torch.arange(0, 51, dtype=torch.float64)
     threshold_set_center_norm = torch.arange(0, 51, dtype=torch.float64) / 100.0
@@ -126,11 +125,12 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
         for trk_id, trk in enumerate(trackers):
             # Load results
             if 'suffix' in kwargs:
-                base_results_path = '{}/{}_{}'.format(trk.results_dir, seq.dataset, kwargs['suffix'], seq.name)
+                base_results_path = os.path.join(trk.results_dir, seq.dataset+'_'+kwargs['suffix'], seq.name)
             else:
                 base_results_path = '{}/{}_{}'.format(trk.results_dir, seq.dataset, seq.name)
             results_path = '{}.txt'.format(base_results_path)
-
+            print(seq.dataset)
+            print(kwargs, base_results_path)
             if os.path.isfile(results_path):
                 pred_bb = torch.tensor(load_text(str(results_path), delimiter=('\t', ','), dtype=np.float64))
             else:
