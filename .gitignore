@@ -2,3 +2,4 @@ __pycache__/
 tracking_results/
 result_plots/
 *.pth
+.vscode/
