@@ -1,0 +1,12 @@
+python3 run_analysis.py \
+    --tracker_name 'dimp' \
+    --tracker_param 'dimp50' \
+    --dataset_name 'got10k_test' \
+    --plots 'success prec norm_prec' \
+    --mode 'consistent' \
+    --var 'motion_blur' \
+    --severity 3 \
+    --max_pos_count 1 \
+    --max_frame_count 3 \
+    --max_level 5 \
+    --order 'ascending' \

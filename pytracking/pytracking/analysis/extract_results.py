@@ -127,7 +127,7 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
             if 'suffix' in kwargs:
                 base_results_path = os.path.join(trk.results_dir, seq.dataset+'_'+kwargs['suffix'], seq.name)
             else:
-                base_results_path = '{}/{}_{}'.format(trk.results_dir, seq.dataset, seq.name)
+                base_results_path = '{}/{}/{}'.format(trk.results_dir, seq.dataset, seq.name) #TODO fix bug
             results_path = '{}.txt'.format(base_results_path)
             print(seq.dataset)
             print(kwargs, base_results_path)
