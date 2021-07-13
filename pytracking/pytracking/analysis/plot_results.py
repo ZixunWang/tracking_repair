@@ -1,16 +1,15 @@
-import tikzplotlib
-import matplotlib
-import matplotlib.pyplot as plt
 import os
-import torch
+import sys
 import pickle
 import json
-# from pytracking.evaluation.environment import env_settings
-# from pytracking.analysis.extract_results import extract_results
-import sys
-sys.path.append(os.path.join(os.getcwd(), '..'))
-from evaluation.environment import env_settings
-from analysis.extract_results import extract_results
+
+import matplotlib
+import tikzplotlib
+import matplotlib.pyplot as plt
+import torch
+
+from pytracking.evaluation.environment import env_settings
+from pytracking.analysis.extract_results import extract_results
 
 def get_plot_draw_styles():
     plot_draw_style = [{'color': (1.0, 0.0, 0.0), 'line_style': '-'},
@@ -161,12 +160,13 @@ def plot_draw_save(y, x, scores, trackers, plot_draw_styles, result_plot_path, p
 
 
 def check_and_load_precomputed_results(trackers, dataset, report_name, force_evaluation=False, **kwargs):
-    # Load data
+    """
+    """
     settings = env_settings()
 
     # Load pre-computed results
-    result_plot_path = os.path.join(settings.result_plot_path, report_name)
-    eval_data_path = os.path.join(result_plot_path, 'eval_data.pkl')
+    eval_data_path = os.path.join(settings.result_plot_path, report_name, 'eval_data.pkl')
+    # eval_data_path = os.path.join(result_plot_path, 'eval_data.pkl')
     if os.path.isfile(eval_data_path) and not force_evaluation:
         with open(eval_data_path, 'rb') as fh:
             eval_data = pickle.load(fh)
@@ -179,8 +179,7 @@ def check_and_load_precomputed_results(trackers, dataset, report_name, force_eva
         eval_data = extract_results(trackers, dataset, report_name, **kwargs)
     else:
         # Update display names
-        tracker_names = [{'name': t.name, 'param': t.parameter_name, 'run_id': t.run_id, 'disp_name': t.display_name}
-                         for t in trackers]
+        tracker_names = [{'name': t.name, 'param': t.parameter_name, 'run_id': t.run_id, 'disp_name': t.display_name} for t in trackers]
         eval_data['trackers'] = tracker_names
 
     return eval_data
@@ -197,7 +196,7 @@ def get_auc_curve(ave_success_rate_plot_overlap, valid_sequence):
 def get_prec_curve(ave_success_rate_plot_center, valid_sequence):
     ave_success_rate_plot_center = ave_success_rate_plot_center[valid_sequence, :, :]
     prec_curve = ave_success_rate_plot_center.mean(0) * 100.0
-    prec_score = prec_curve[:, 20]
+    prec_score = prec_curve[:, 20] # why select the 20th value
 
     return prec_curve, prec_score
 
@@ -215,25 +214,19 @@ def plot_results(trackers, dataset, report_name, merge_results=False,
         plot_types - List of scores to display. Can contain 'success',
                     'prec' (precision), and 'norm_prec' (normalized precision)
     """
-    # Load data
-    settings = env_settings()
-
-    plot_draw_styles = get_plot_draw_styles()
-
     # Load pre-computed results
-    result_plot_path = os.path.join(settings.result_plot_path, report_name)
     eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, force_evaluation, **kwargs)
-
     # Merge results from multiple runs
     if merge_results:
         eval_data = merge_multiple_runs(eval_data)
 
+    settings = env_settings()
+    plot_draw_styles = get_plot_draw_styles()
+    result_plot_path = os.path.join(settings.result_plot_path, report_name) #TODO add dataset name
     tracker_names = eval_data['trackers']
-
     valid_sequence = torch.tensor(eval_data['valid_sequence'], dtype=torch.bool)
 
     print('\nPlotting results over {} / {} sequences'.format(valid_sequence.long().sum().item(), valid_sequence.shape[0]))
-
     print('\nGenerating plots for: {}'.format(report_name))
 
     # ********************************  Success Plot **************************************

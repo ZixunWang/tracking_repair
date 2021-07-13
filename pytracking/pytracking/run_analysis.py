@@ -1,6 +1,5 @@
 import os
 import sys
-
 import argparse
 
 env_path = os.path.join(os.path.dirname(__file__), '..')
@@ -9,7 +8,7 @@ if env_path not in sys.path:
 
 from pytracking.evaluation.datasets import get_perturb_dataset, get_dataset
 from pytracking.evaluation.tracker import Tracker
-from pytracking.analysis.plot_results import plot_results
+from pytracking.analysis.plot_results import plot_results, print_results
 from pytracking.utils.suffix import construct_suffix
 
 def main():
@@ -52,11 +51,12 @@ def main():
     if perturb_info['perturb_on']:
         dataset = get_perturb_dataset(perturb_info, args.dataset_name)
         suffix = construct_suffix(perturb_info)
-        plot_results(trackers, dataset, 'test.'+suffix, plot_types=args.plots.split(' '), suffix='test.'+suffix)
+        # plot_results(trackers, dataset, 'test.'+suffix, plot_types=args.plots.split(' '), suffix='test.'+suffix)
+        print_results(trackers, dataset, 'test.'+suffix, plot_types=args.plots.split(' '), suffix='test.'+suffix)
     else:
         dataset = get_dataset(args.dataset_name)
-        plot_results(trackers, dataset, 'test', plot_types=args.plots.split(' '))
-
+        # plot_results(trackers, dataset, 'test', plot_types=args.plots.split(' '))
+        print_results(trackers, dataset, 'test', plot_types=args.plots.split(' '))
 
 if __name__ == '__main__':
     main()

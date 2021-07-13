@@ -9,4 +9,4 @@ python3 run_analysis.py \
     --max_pos_count 1 \
     --max_frame_count 3 \
     --max_level 5 \
-    --order 'ascending' \
+    --order 'ascending'
