@@ -70,24 +70,26 @@ def burst(clip_length:int, order:str, severity:int, burst_pos: int = None):
         raise ValueError(f'Invalid order argument: {order}')
 
 
-mode2func = {
-    'consistent': consistent,
-    'random': random,
-    'smooth': smooth,
-    'burst': burst,
-}
+def get_severity_sequence(clip_length: int, mode: str, perturb_args: dict) -> list:
+    """Get perturbation severity for each frame in the clip based on given perturbation mode.
+    
+    Args:
+        clip_length:
+        mode: 
+        perturb_args: 
 
-
-def get_severity(clip_length, args):
-    """Get severity sequence for target clip.
+    Return:
+        severity_sequence: list of perturbation severity
     """
-    if args.mode.lower() == 'consistent':
-        return mode2func[args.mode](clip_length, args.severity)
-    elif args.mode.lower() == 'random':
-        return mode2func[args.mode](clip_length, args.max_pos_count, args.max_frame_count)
-    elif args.mode.lower() == 'smooth':
-        return mode2func[args.mode](clip_length, args.order, args.max_level)
-    elif args.mode.lower() == 'burst':
-        return mode2func[args.mode](clip_length, args.order, args.severity, args.burst_pos)
+    if mode.lower() == 'consistent':
+        severity_sequence = consistent(clip_length, perturb_args['severity'])
+    elif mode.lower() == 'random':
+        severity_sequence = random(clip_length, perturb_args['max_pos_count'], perturb_args['max_frame_count'])
+    elif mode.lower() == 'smooth':
+        severity_sequence = smooth(clip_length, perturb_args['order'], perturb_args['max_level'])
+    elif mode.lower() == 'burst':
+        severity_sequence = burst(clip_length, perturb_args['order'], perturb_args['severity'], perturb_args['burst_pos'])
     else:
-        raise ValueError(f'Invalid mode: {args.mode}')
+        raise ValueError('Unsupported mode: {}'.format(perturb_args['mode']))
+
+    return severity_sequence

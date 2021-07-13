@@ -2,9 +2,6 @@
 
 import numpy as np
 from PIL import Image
-
-# /////////////// Corruption ers ///////////////
-
 import skimage as sk
 from skimage.filters import gaussian
 from io import BytesIO
@@ -18,7 +15,7 @@ from scipy.ndimage import zoom as scizoom
 from scipy.ndimage.interpolation import map_coordinates
 import warnings
 import os
-from pkg_resources import resource_filename #! frost resource not ready
+from pkg_resources import resource_filename
 
 warnings.simplefilter("ignore", UserWarning)
 
@@ -127,7 +124,6 @@ def fog(x, severity=1):
     x += c[0] * plasma_fractal(wibbledecay=c[1])[:224, :224][..., np.newaxis]
     return np.clip(x * max_val / (max_val + c[0]), 0, 1) * 255
 
-
 def frost(x, severity=1):
     c = [(1, 0.4),
          (0.8, 0.6),
@@ -147,7 +143,6 @@ def frost(x, severity=1):
     frost = frost[x_start:x_start + 224, y_start:y_start + 224][..., [2, 1, 0]]
 
     return np.clip(c[0] * np.array(x) + c[1] * frost, 0, 255)
-
 
 def snow(x, severity=1):
     c = [(0.1, 0.3, 3, 0.5, 10, 4, 0.8),
@@ -183,7 +178,6 @@ def gaussian_noise(x, severity=1):
 
     x = np.array(x) / 255.
     return np.clip(x + np.random.normal(size=x.shape, scale=c), 0, 1) * 255
-
 
 def shot_noise(x, severity=1):
     c = [60, 25, 12, 5, 3][severity - 1]
@@ -248,7 +242,6 @@ def defocus_blur(x, severity=1):
 
     return np.clip(channels, 0, 1) * 255
 
-
 def motion_blur(x, severity=1):
     c = [(10, 3), (15, 5), (15, 8), (15, 12), (20, 15)][severity - 1]
 
@@ -265,7 +258,6 @@ def motion_blur(x, severity=1):
         return np.clip(x[..., [2, 1, 0]], 0, 255)  # BGR to RGB
     else:  # greyscale to RGB
         return np.clip(np.array([x, x, x]).transpose((1, 2, 0)), 0, 255)
-
 
 def zoom_blur(x, severity=1):
     c = [np.arange(1, 1.11, 0.01),
@@ -399,3 +391,23 @@ def elastic_transform(image, severity=1):
     x, y, z = np.meshgrid(np.arange(shape[1]), np.arange(shape[0]), np.arange(shape[2]))
     indices = np.reshape(y + dy, (-1, 1)), np.reshape(x + dx, (-1, 1)), np.reshape(z, (-1, 1))
     return np.clip(map_coordinates(image, indices, order=1, mode='reflect').reshape(shape), 0, 1) * 255
+
+var2func = {
+    'fog':fog,
+    'frost':frost,
+    'snow':snow,
+    'gaussian_noise':gaussian_noise,
+    'shot_noise':shot_noise,
+    'brightness':brightness,
+    'contrast':contrast,
+    'impulse_noise':impulse_noise,
+    'jpeg_compression':jpeg_compression,
+    'pixelate':pixelate,
+    'defocus_blur':defocus_blur,
+    'motion_blur':motion_blur,
+    'zoom_blur':zoom_blur,
+    'gaussian_blur':gaussian_blur,
+    'glass_blur':glass_blur,
+    'spatter':spatter,
+    'saturate':saturate
+}

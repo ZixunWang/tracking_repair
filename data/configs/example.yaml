@@ -1,0 +1,19 @@
+# perturbation configs example
+
+ROOT: '/where/you/store/the/datasets'
+DATASET: 'datasetName'
+SPLIT: 'splitName'
+
+perturbations: # perturbation settings to apply
+  -
+    var: 'perturbVariable'
+    mode: 'perturbMode'
+    mode_args: # related arguments
+      severity: 5
+  -
+    var: 'perturbVariable'
+    mode: 'perturbMode'
+    mode_args: 
+      order: 'ascending'
+      max_level: 5
+
