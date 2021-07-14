@@ -32,7 +32,7 @@ perturbations:
     mode: 'smooth'
     mode_args: 
       order: 'descending'
-      severity: 5
+      max_level: 5
 
   -
     var: 'motion_blur'
