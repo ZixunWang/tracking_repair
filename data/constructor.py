@@ -44,6 +44,7 @@ def main():
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
+        logging.info(f'peturbation configs:\n{perturbation}')
         process_single_clip(Path(input_path), Path(output_path), perturbation, logger=logging)
     logging.info('Perturbation is done.')
 

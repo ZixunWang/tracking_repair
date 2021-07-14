@@ -1,0 +1,51 @@
+# perturbation configs example
+
+ROOT: '/DATASET/tracking'
+DATASET: 'GOT10k'
+SPLIT: 'test'
+
+perturbations:
+  -
+    var: 'motion_blur'
+    mode: 'consistent'
+    mode_args:
+      severity: 2
+  -
+    var: 'motion_blur'
+    mode: 'consistent'
+    mode_args:
+      severity: 4
+  -
+    var: 'motion_blur'
+    mode: 'random'
+    mode_args: 
+      max_pos_count: 1
+      max_frame_count: 3
+  -
+    var: 'motion_blur'
+    mode: 'smooth'
+    mode_args: 
+      order: 'ascending'
+      max_level: 5
+  -
+    var: 'motion_blur'
+    mode: 'smooth'
+    mode_args: 
+      order: 'descending'
+      severity: 5
+
+  -
+    var: 'motion_blur'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 1
+
+  -
+    var: 'motion_blur'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 2
+                            
+                        

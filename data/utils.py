@@ -17,7 +17,7 @@ def process_single_image(i, o, var, severity):
     # im = cv2.imread(str(i))
     im = Image.open(str(i))
     p_im = var2func[var](im, severity)
-    cv2.imwrite(str(o), p_im)
+    cv2.imwrite(str(o), p_im[:, :, ::-1])
 
 
 def process_single_clip(i, o, perturb_info, logger=None):
@@ -31,7 +31,7 @@ def process_single_clip(i, o, perturb_info, logger=None):
         if x.endswith('.jpg') or x.endswith('.png'):
             img_list.append(x)
         else:
-            process_single_clip(i / x, o / x, perturb_info)
+            process_single_clip(i / x, o / x, perturb_info, logger)
 
     img_list.sort()
     img_list = list(filter(lambda x: not (o / x).exists(), img_list)) # resume
@@ -40,7 +40,7 @@ def process_single_clip(i, o, perturb_info, logger=None):
 
     severity_seq = get_severity_sequence(len(img_list), perturb_info['mode'], perturb_info['mode_args'])
     # var_func = var2func[perturb_info['var']]
-    tasks = [(i / img_list[k], o / img_list[k], perturb_info['var'], severity_seq[k]) for k in range(len(img_list))]
+    tasks = [(i / img_list[k], o / img_list[k], perturb_info['var'], severity_seq[k]) for k in range(len(img_list)) if not (o/img_list[k]).exists()]
 
     if logger is not None:
         logger.info(f'processing {i}...')
