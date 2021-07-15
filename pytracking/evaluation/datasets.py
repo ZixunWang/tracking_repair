@@ -55,7 +55,6 @@ def load_dataset(name: str):
     
     return dataset.get_sequence_list()
 
-
 def get_dataset(*args):
     """ Get a single or set of datasets."""
     dset = SequenceList()
@@ -63,8 +62,6 @@ def get_dataset(*args):
         dset.extend(load_dataset(name))
     return dset
 
-# 由于get_dataset函数被其他很多地方调用，所以不能直接对其进行修改
-# 因此，在这里额外创建get_perturb_dataset函数
 def get_perturb_dataset(perturb_info, *args):
     """ Get a single or set of datasets."""
     dset = SequenceList()

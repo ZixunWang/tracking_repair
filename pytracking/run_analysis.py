@@ -51,8 +51,8 @@ def main():
     if perturb_info['perturb_on']:
         dataset = get_perturb_dataset(perturb_info, args.dataset_name)
         suffix = construct_suffix(perturb_info)
-        # plot_results(trackers, dataset, 'test.'+suffix, plot_types=args.plots.split(' '), suffix='test.'+suffix)
-        print_results(trackers, dataset, 'test.'+suffix, plot_types=args.plots.split(' '), suffix='test.'+suffix)
+        # plot_results(trackers, dataset, 'test.'+suffix, plot_types=args.plots.split(' '), suffix=suffix)
+        print_results(trackers, dataset, 'test.'+suffix, plot_types=args.plots.split(' '), suffix=suffix)
     else:
         dataset = get_dataset(args.dataset_name)
         # plot_results(trackers, dataset, 'test', plot_types=args.plots.split(' '))

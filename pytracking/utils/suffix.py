@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 """
 @File    :   suffix.py
-@Time    :   2021/07/04 17:33:00
+@Time    :   2021/07/15 09:17:40
 @Author  :   Xing Yun
 """
+
 
 
 def construct_suffix(perturb_args) -> str:
@@ -12,12 +13,12 @@ def construct_suffix(perturb_args) -> str:
     base = var+'.'+mode
 
     if mode == 'consistent':
-        return base+'_'+str(perturb_args['setting']['severity'])
+        return base+'.'+str(perturb_args['setting']['severity'])
     elif mode == 'random':
-        return base+'_'+str(perturb_args['setting']['max_position']) + '_'+ str(perturb_args['setting']['max_frame'])
+        return base+'.'+str(perturb_args['setting']['max_position']) + '_'+ str(perturb_args['setting']['max_frame'])
     elif mode == 'smooth':
-        return base+'_'+perturb_args['setting']['order']+'_'+str(perturb_args['setting']['max_level'])
+        return base+'.'+perturb_args['setting']['order']+'_'+str(perturb_args['setting']['max_level'])
     elif mode == 'burst':
-        return base+'_'+perturb_args['setting']['order']+'_'+str(perturb_args['setting']['severity'])+'_'+str(perturb_args['setting']['burst_position'])
+        return base+'.'+perturb_args['setting']['order']+'_'+str(perturb_args['setting']['severity'])+'_'+str(perturb_args['setting']['burst_position'])
     else:
         raise ValueError(f'Invalid mode setting: {mode}')

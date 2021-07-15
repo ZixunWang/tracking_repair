@@ -139,9 +139,9 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
         for trk_id, trk in enumerate(trackers):
             # Load results
             if 'suffix' in kwargs:
-                results_path = '{}/{}'.format(trk.results_dir, seq.dataset+'.test'+kwargs['suffix'])
+                results_path = os.path.join(trk.results_dir, seq.dataset, 'test.{}'.format(kwargs['suffix']))
             else:
-                results_path = '{}/{}'.format(trk.results_dir, seq.dataset+'.test')
+                results_path = os.path.join(trk.results_dir, seq.dataset, 'test')
         
             result = '{}/{}.txt'.format(results_path, seq.name)
 
