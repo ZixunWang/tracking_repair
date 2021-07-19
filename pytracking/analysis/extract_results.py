@@ -12,6 +12,7 @@ if env_path not in sys.path:
     sys.path.append(env_path)
 
 from pytracking.evaluation.environment import env_settings
+from pytracking.utils.suffix import construct_suffix
 
 
 def calc_err_center(pred_bb, anno_bb, normalized=False):
@@ -34,7 +35,6 @@ def calc_iou_overlap(pred_bb, anno_bb):
     br = torch.min(pred_bb[:, :2] + pred_bb[:, 2:] - 1.0, anno_bb[:, :2] + anno_bb[:, 2:] - 1.0)
     # calculate the width and height of intersection
     sz = (br - tl + 1.0).clamp(0)
-    print(sz)
 
     # calculate area
     intersection = sz.prod(dim=1)
@@ -109,7 +109,7 @@ def calc_seq_err_robust(pred_bb, anno_bb, dataset, target_visible=None):
 
 
 def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot_gap=0.05,
-                    exclude_invalid_frames=False, **kwargs):
+                    exclude_invalid_frames=False, perturb_info=None):
     """"""
 
     # define threshold for overlap and distance
@@ -138,8 +138,8 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
 
         for trk_id, trk in enumerate(trackers):
             # Load results
-            if 'suffix' in kwargs:
-                results_path = os.path.join(trk.results_dir, seq.dataset, 'test.{}'.format(kwargs['suffix']))
+            if perturb_info:
+                results_path = os.path.join(trk.results_dir, seq.dataset, 'test.{}'.format(construct_suffix(perturb_info)))
             else:
                 results_path = os.path.join(trk.results_dir, seq.dataset, 'test')
         

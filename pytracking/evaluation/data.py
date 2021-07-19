@@ -155,8 +155,8 @@ class SequenceList(list):
                 if seq.name == item:
                     return seq
             raise IndexError('Sequence name not in the dataset.')
-        elif isinstance(item, int):
-            return super(SequenceList, self).__getitem__(item)
+        # elif isinstance(item, int):
+        #     return super(SequenceList, self).__getitem__(item)
         elif isinstance(item, (tuple, list)):
             return SequenceList([super(SequenceList, self).__getitem__(i) for i in item])
         else:

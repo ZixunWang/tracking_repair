@@ -1,126 +1,20 @@
-ROOT: '/DATASET/tracking'
-DATASET: 'GOT10k'
-SPLIT: 'test'
-  -
-    var: 'fog'
-    mode: 'consistent'
-    mode_args:
-      severity: 3
-  -
-    var: 'fog'
-    mode: 'smooth'
-    mode_args:
-      order: 'ascending'
-      max_level: 5
-  -
-    var: 'fog'
-    mode: 'random'
-    mode_args:
-      max_pos_count: 1
-      max_frame_count: 3
-  -
-    var: 'fog'
-    mode: 'burst'
-    mode_args:
-      order: 'ascending'
-      severity: 5
-      burst_pos: null
-  -
-    var: 'frost'
-    mode: 'consistent'
-    mode_args:
-      severity: 3
-  -
-    var: 'frost'
-    mode: 'smooth'
-    mode_args:
-      order: 'ascending'
-      max_level: 5
-  -
-    var: 'frost'
-    mode: 'random'
-    mode_args:
-      max_pos_count: 1
-      max_frame_count: 3
-  -
-    var: 'frost'
-    mode: 'burst'
-    mode_args:
-      order: 'ascending'
-      severity: 5
-      burst_pos: null
-  -
-    var: 'rain'
-    mode: 'consistent'
-    mode_args:
-      severity: 3
-  -
-    var: 'rain'
-    mode: 'smooth'
-    mode_args:
-      order: 'ascending'
-      max_level: 5
-  -
-    var: 'rain'
-    mode: 'random'
-    mode_args:
-      max_pos_count: 1
-      max_frame_count: 3
-  -
-    var: 'rain'
-    mode: 'burst'
-    mode_args:
-      order: 'ascending'
-      severity: 5
-      burst_pos: null
-  -
-    var: 'gaussian_noise'
-    mode: 'consistent'
-    mode_args:
-      severity: 3
-  -
-    var: 'gaussian_noise'
-    mode: 'smooth'
-    mode_args:
-      order: 'ascending'
-      max_level: 5
-  -
-    var: 'gaussian_noise'
-    mode: 'random'
-    mode_args:
-      max_pos_count: 1
-      max_frame_count: 3
-  -
-    var: 'gaussian_noise'
-    mode: 'burst'
-    mode_args:
-      order: 'ascending'
-      severity: 5
-      burst_pos: null
-  -
-    var: 'shot_noise'
-    mode: 'consistent'
-    mode_args:
-      severity: 3
-  -
-    var: 'shot_noise'
-    mode: 'smooth'
-    mode_args:
-      order: 'ascending'
-      max_level: 5
-  -
-    var: 'shot_noise'
-    mode: 'random'
-    mode_args:
-      max_pos_count: 1
-      max_frame_count: 3
-  -
-    var: 'shot_noise'
-    mode: 'burst'
-    mode_args:
-      order: 'ascending'
-      severity: 5
-      burst_pos: null
+trackers: ['dimp']
+parameters: ['dimp50']
+run_id: null
+dataset: 'otb'
+sequence: null
+debug: 0
+
+threads: 0
+
+visdom:
+  use_visdom: True
+  visdom_server: '127.0.0.1'
+  visdom_port: 8097
+
+perturb: True
+
+perturbations:
   -
     var: 'brightness'
     mode: 'consistent'
@@ -132,12 +26,14 @@ SPLIT: 'test'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
     var: 'brightness'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
     var: 'brightness'
     mode: 'burst'
@@ -156,12 +52,14 @@ SPLIT: 'test'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
     var: 'contrast'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
     var: 'contrast'
     mode: 'burst'
@@ -180,12 +78,14 @@ SPLIT: 'test'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
     var: 'elastic'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
     var: 'elastic'
     mode: 'burst'
@@ -194,6 +94,32 @@ SPLIT: 'test'
       severity: 5
       burst_pos: null
   -
+    var: 'gaussian_noise'
+    mode: 'consistent'
+    mode_args:
+      severity: 3
+  -
+    var: 'gaussian_noise'
+    mode: 'smooth'
+    mode_args:
+      order: 'ascending'
+      max_level: 5
+
+  -
+    var: 'gaussian_noise'
+    mode: 'random'
+    mode_args:
+      max_pos_count: 1
+      max_frame_count: 3
+
+  -
+    var: 'gaussian_noise'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 5
+      burst_pos: null
+  -
     var: 'impulse_noise'
     mode: 'consistent'
     mode_args:
@@ -204,12 +130,14 @@ SPLIT: 'test'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
     var: 'impulse_noise'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
     var: 'impulse_noise'
     mode: 'burst'
@@ -228,12 +156,14 @@ SPLIT: 'test'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
     var: 'jpeg'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
     var: 'jpeg'
     mode: 'burst'
@@ -242,96 +172,78 @@ SPLIT: 'test'
       severity: 5
       burst_pos: null
   -
-    var: 'pixelate'
+    var: 'rain'
     mode: 'consistent'
     mode_args:
       severity: 3
   -
-    var: 'pixelate'
+    var: 'rain'
     mode: 'smooth'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
-    var: 'pixelate'
+    var: 'rain'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
-    var: 'pixelate'
+    var: 'rain'
     mode: 'burst'
     mode_args:
       order: 'ascending'
       severity: 5
       burst_pos: null
   -
-    var: 'defocus_blur'
+    var: 'shot_noise'
     mode: 'consistent'
     mode_args:
       severity: 3
   -
-    var: 'defocus_blur'
+    var: 'shot_noise'
     mode: 'smooth'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
-    var: 'defocus_blur'
+    var: 'shot_noise'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
-    var: 'defocus_blur'
+    var: 'shot_noise'
     mode: 'burst'
     mode_args:
       order: 'ascending'
       severity: 5
       burst_pos: null
   -
-    var: 'motion_blur'
+    var: 'pixelate'
     mode: 'consistent'
     mode_args:
       severity: 3
   -
-    var: 'motion_blur'
+    var: 'pixelate'
     mode: 'smooth'
     mode_args:
       order: 'ascending'
       max_level: 5
+
   -
-    var: 'motion_blur'
+    var: 'pixelate'
     mode: 'random'
     mode_args:
       max_pos_count: 1
       max_frame_count: 3
+
   -
-    var: 'motion_blur'
-    mode: 'burst'
-    mode_args:
-      order: 'ascending'
-      severity: 5
-      burst_pos: null
-  -
-    var: 'zoom_blur'
-    mode: 'consistent'
-    mode_args:
-      severity: 3
-  -
-    var: 'zoom_blur'
-    mode: 'smooth'
-    mode_args:
-      order: 'ascending'
-      max_level: 5
-  -
-    var: 'zoom_blur'
-    mode: 'random'
-    mode_args:
-      max_pos_count: 1
-      max_frame_count: 3
-  -
-    var: 'zoom_blur'
+    var: 'pixelate'
     mode: 'burst'
     mode_args:
       order: 'ascending'

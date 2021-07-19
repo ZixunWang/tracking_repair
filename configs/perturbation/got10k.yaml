@@ -1,6 +1,7 @@
 ROOT: '/DATASET/tracking'
 DATASET: 'GOT10k'
 SPLIT: 'test'
+perturbations:
   -
     var: 'fog'
     mode: 'consistent'

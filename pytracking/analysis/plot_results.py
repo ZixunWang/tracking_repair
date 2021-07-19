@@ -159,7 +159,7 @@ def plot_draw_save(y, x, scores, trackers, plot_draw_styles, result_plot_path, p
     plt.draw()
 
 
-def check_and_load_precomputed_results(trackers, dataset, report_name, force_evaluation=False, **kwargs):
+def check_and_load_precomputed_results(trackers, dataset, report_name, force_evaluation=False, perturb_info=None):
     """
     """
     settings = env_settings()
@@ -172,11 +172,11 @@ def check_and_load_precomputed_results(trackers, dataset, report_name, force_eva
             eval_data = pickle.load(fh)
     else:
         # print('Pre-computed evaluation data not found. Computing results!')
-        eval_data = extract_results(trackers, dataset, report_name, **kwargs)
+        eval_data = extract_results(trackers, dataset, report_name, perturb_info=perturb_info)
 
     if not check_eval_data_is_valid(eval_data, trackers, dataset):
         # print('Pre-computed evaluation data invalid. Re-computing results!')
-        eval_data = extract_results(trackers, dataset, report_name, **kwargs)
+        eval_data = extract_results(trackers, dataset, report_name, perturb_info=perturb_info)
     else:
         # Update display names
         tracker_names = [{'name': t.name, 'param': t.parameter_name, 'run_id': t.run_id, 'disp_name': t.display_name} for t in trackers]
@@ -202,7 +202,7 @@ def get_prec_curve(ave_success_rate_plot_center, valid_sequence):
 
 
 def plot_results(trackers, dataset, report_name, merge_results=False,
-                 plot_types=('success'), force_evaluation=False, **kwargs):
+                 plot_types=('success'), force_evaluation=False, perturb_info=None):
     """
     Plot results for the given trackers
 
@@ -215,7 +215,7 @@ def plot_results(trackers, dataset, report_name, merge_results=False,
                     'prec' (precision), and 'norm_prec' (normalized precision)
     """
     # Load pre-computed results
-    eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, force_evaluation, **kwargs)
+    eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, force_evaluation, perturb_info)
     # Merge results from multiple runs
     if merge_results:
         eval_data = merge_multiple_runs(eval_data)
@@ -299,7 +299,7 @@ def generate_formatted_report(row_labels, scores, table_name=''):
 
 
 def print_results(trackers, dataset, report_name, merge_results=False,
-                  plot_types=('success'), **kwargs):
+                  plot_types=('success'), perturb_info=None):
     """ Print the results for the given trackers in a formatted table
     args:
         trackers - List of trackers to evaluate
@@ -310,7 +310,7 @@ def print_results(trackers, dataset, report_name, merge_results=False,
                     'prec' (prints precision score), and 'norm_prec' (prints normalized precision score)
     """
     # Load pre-computed results
-    eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, **kwargs)
+    eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, perturb_info=perturb_info)
 
     # Merge results from multiple runs
     if merge_results:
@@ -418,7 +418,7 @@ def plot_got_success(trackers, report_name):
 
 
 def print_per_sequence_results(trackers, dataset, report_name, merge_results=False,
-                               filter_criteria=None, **kwargs):
+                               filter_criteria=None, perturb_info=None):
     """ Print per-sequence results for the given trackers. Additionally, the sequences to list can be filtered using
     the filter criteria.
 
@@ -441,7 +441,7 @@ def print_per_sequence_results(trackers, dataset, report_name, merge_results=Fal
                                     between each other.
     """
     # Load pre-computed results
-    eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, **kwargs)
+    eval_data = check_and_load_precomputed_results(trackers, dataset, report_name, perturb_info)
 
     # Merge results from multiple runs
     if merge_results:

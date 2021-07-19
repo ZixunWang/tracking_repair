@@ -6,8 +6,9 @@ import logging
 import argparse
 import re
 from easydict import EasyDict
+import yaml
 
-from utils import process_single_clip, cfg_from_yaml_file, get_perturbation_name, validate_perturbation
+from utils import process_single_clip, get_perturbation_name, validate_perturbation
 
 
 logging.basicConfig(level=logging.INFO,
@@ -19,12 +20,18 @@ def main():
     parser.add_argument('-c', '--config', type=str, help='path to perturbation configuration')
     args = parser.parse_args()
 
-    cfg = EasyDict(cfg_from_yaml_file(args.config))
+    try:
+        with open(args.config, 'r') as f:
+            config = yaml.load(f, Loader=yaml.FullLoader)
+            cfg = EasyDict(config)
+    except:
+        raise Exception('Unable to open configuration file: {}'.format(args.config))
 
     if not cfg.SPLIT: # for those datasets released without pre-defined split
         input_path = os.path.join(cfg.ROOT, cfg.DATASET)
     else:
         input_path = os.path.join(cfg.ROOT, cfg.DATASET, cfg.SPLIT)
+
     if not os.path.exists(input_path):
         raise FileNotFoundError('Dataset not found: {}'.format(input_path))
 
@@ -44,7 +51,7 @@ def main():
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
-        logging.info(f'peturbation configs:\n{perturbation}')
+        logging.info(f'peturbation configs:\n\t\t\t\t\t{perturbation}')
         process_single_clip(Path(input_path), Path(output_path), perturbation, logger=logging)
     logging.info('Perturbation is done.')
 

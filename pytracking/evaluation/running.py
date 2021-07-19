@@ -16,7 +16,7 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict, perturb_
         os.makedirs(tracker.results_dir)
 
     #TODO default to save test results, revise to suit other splits
-    if perturb_info['perturb_on']:
+    if perturb_info:
         perturb_suffix = construct_suffix(perturb_info)
         base_results_path = os.path.join(tracker.results_dir, seq.dataset, 'test.{}'.format(perturb_suffix), seq.name)
         segmentation_path = os.path.join(tracker.segmentation_dir, seq.dataset, 'test.{}'.format(perturb_suffix), seq.name)
@@ -88,20 +88,28 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict, perturb_
                 imwrite_indexed(os.path.join(segmentation_path, '{}.png'.format(frame_name)), frame_seg)
 
 
-def run_sequence(seq: Sequence, tracker: Tracker, debug=False, visdom_info=None, perturb_info=None):
+def run_sequence(seq: Sequence, tracker: Tracker, debug: bool, visdom_info: dict, perturb_info: dict):
     """Runs a tracker on a sequence."""
 
     def _results_exist():
-        if seq.object_ids is None:
-            bbox_file = '{}/{}.txt'.format(tracker.results_dir, seq.name)
-            return os.path.isfile(bbox_file)
+        """Default to find results of test split."""
+        if perturb_info is not None:
+            suffix = construct_suffix(perturb_info)
+            if seq.object_ids is None:
+                bbox_file = '{}/{}/{}.txt'.format(tracker.results_dir, seq.dataset, 'test.{}'.format(suffix), seq.name)
+                return os.path.isfile(bbox_file)
+            else:
+                bbox_files = ['{}/{}/{}_{}.txt'.format(tracker.results_dir, seq.dataset, 'test.{}'.format(suffix), seq.name, obj_id) for obj_id in seq.object_ids]
+                missing = [not os.path.isfile(f) for f in bbox_files]
+                return sum(missing) == 0
         else:
-            bbox_files = ['{}/{}_{}.txt'.format(tracker.results_dir, seq.name, obj_id) for obj_id in seq.object_ids]
-            missing = [not os.path.isfile(f) for f in bbox_files]
-            return sum(missing) == 0
-
-    visdom_info = {} if visdom_info is None else visdom_info
-    perturb_info = {} if perturb_info is None else perturb_info
+            if seq.object_ids is None:
+                bbox_file = '{}/{}/{}/{}.txt'.format(tracker.results_dir, seq.dataset, 'test', seq.name)
+                return os.path.isfile(bbox_file)
+            else:
+                bbox_files = ['{}/{}/{}/{}_{}.txt'.format(tracker.results_dir, seq.dataset, 'test', seq.name, obj_id) for obj_id in seq.object_ids]
+                missing = [not os.path.isfile(f) for f in bbox_files]
+                return sum(missing) == 0
 
     if _results_exist() and not debug:
         print('FPS: {}'.format(-1))
@@ -133,34 +141,24 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, visdom_info=None,
         _save_tracker_output(seq, tracker, output, perturb_info)
 
 
-def run_dataset(dataset, trackers, debug=False, threads=0, visdom_info=None, perturb_info=None):
-    """Runs a list of trackers on a dataset.
+def run_dataset(dataset, trackers, debug, threads, visdom_info=None, perturb_info=None):
+    """Runs a list of trackers (tracker with different parameter) on a list of Sequence.
     args:
-        dataset: List of Sequence instances, forming a dataset.
-        trackers: List of Tracker instances.
-        debug: Debug level.
-        threads: Number of threads to use (default 0).
-        visdom_info: Dict containing information about the server for visdom
+        dataset: list of Sequence instances, forming a dataset.
+        trackers: list of Tracker instances.
+        debug: debug level.
+        threads: number of threads to use (default 0).
+        visdom_info: dict containing information about the server for visdom
     """
     multiprocessing.set_start_method('spawn', force=True)
 
     print('Evaluating {:4d} trackers on {:5d} sequences'.format(len(trackers), len(dataset)))
 
-    multiprocessing.set_start_method('spawn', force=True)
-
-    visdom_info = {} if visdom_info is None else visdom_info
-    perturb_info = {} if perturb_info is None else perturb_info
-
-    if threads == 0:
-        mode = 'sequential'
-    else:
-        mode = 'parallel'
-
-    if mode == 'sequential':
+    if threads <= 0:
         for seq in dataset:
             for tracker_info in trackers:
-                run_sequence(seq, tracker_info, debug=debug, visdom_info=visdom_info, perturb_info=perturb_info)
-    elif mode == 'parallel':
+                run_sequence(seq, tracker_info, debug, visdom_info, perturb_info)
+    else:
         param_list = [(seq, tracker_info, debug, visdom_info, perturb_info) for seq, tracker_info in product(dataset, trackers)]
         with multiprocessing.Pool(processes=threads) as pool:
             pool.starmap(run_sequence, param_list)

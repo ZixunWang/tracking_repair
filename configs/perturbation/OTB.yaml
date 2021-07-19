@@ -1,0 +1,340 @@
+ROOT: '/DATASET/tracking'
+DATASET: 'OTB'
+SPLIT: 'test'
+perturbations:
+  # -
+  #   var: 'fog'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'fog'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'fog'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'fog'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  -
+    var: 'frost'
+    mode: 'consistent'
+    mode_args:
+      severity: 3
+  -
+    var: 'frost'
+    mode: 'smooth'
+    mode_args:
+      order: 'ascending'
+      max_level: 5
+  -
+    var: 'frost'
+    mode: 'random'
+    mode_args:
+      max_pos_count: 1
+      max_frame_count: 3
+  -
+    var: 'frost'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 5
+      burst_pos: null
+  # -
+  #   var: 'rain'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'rain'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'rain'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'rain'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  # -
+  #   var: 'gaussian_noise'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'gaussian_noise'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'gaussian_noise'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'gaussian_noise'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  # -
+  #   var: 'shot_noise'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'shot_noise'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'shot_noise'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'shot_noise'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  # -
+  #   var: 'brightness'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'brightness'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'brightness'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'brightness'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  # -
+  #   var: 'contrast'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'contrast'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'contrast'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'contrast'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  # -
+  #   var: 'elastic'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'elastic'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'elastic'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'elastic'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  # -
+  #   var: 'impulse_noise'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'impulse_noise'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'impulse_noise'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'impulse_noise'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  # -
+  #   var: 'jpeg'
+  #   mode: 'consistent'
+  #   mode_args:
+  #     severity: 3
+  # -
+  #   var: 'jpeg'
+  #   mode: 'smooth'
+  #   mode_args:
+  #     order: 'ascending'
+  #     max_level: 5
+  # -
+  #   var: 'jpeg'
+  #   mode: 'random'
+  #   mode_args:
+  #     max_pos_count: 1
+  #     max_frame_count: 3
+  # -
+  #   var: 'jpeg'
+  #   mode: 'burst'
+  #   mode_args:
+  #     order: 'ascending'
+  #     severity: 5
+  #     burst_pos: null
+  -
+    var: 'pixelate'
+    mode: 'consistent'
+    mode_args:
+      severity: 3
+  -
+    var: 'pixelate'
+    mode: 'smooth'
+    mode_args:
+      order: 'ascending'
+      max_level: 5
+  -
+    var: 'pixelate'
+    mode: 'random'
+    mode_args:
+      max_pos_count: 1
+      max_frame_count: 3
+  -
+    var: 'pixelate'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 5
+      burst_pos: null
+  -
+    var: 'defocus_blur'
+    mode: 'consistent'
+    mode_args:
+      severity: 3
+  -
+    var: 'defocus_blur'
+    mode: 'smooth'
+    mode_args:
+      order: 'ascending'
+      max_level: 5
+  -
+    var: 'defocus_blur'
+    mode: 'random'
+    mode_args:
+      max_pos_count: 1
+      max_frame_count: 3
+  -
+    var: 'defocus_blur'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 5
+      burst_pos: null
+  -
+    var: 'motion_blur'
+    mode: 'consistent'
+    mode_args:
+      severity: 3
+  -
+    var: 'motion_blur'
+    mode: 'smooth'
+    mode_args:
+      order: 'ascending'
+      max_level: 5
+  -
+    var: 'motion_blur'
+    mode: 'random'
+    mode_args:
+      max_pos_count: 1
+      max_frame_count: 3
+  -
+    var: 'motion_blur'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 5
+      burst_pos: null
+  -
+    var: 'zoom_blur'
+    mode: 'consistent'
+    mode_args:
+      severity: 3
+  -
+    var: 'zoom_blur'
+    mode: 'smooth'
+    mode_args:
+      order: 'ascending'
+      max_level: 5
+  -
+    var: 'zoom_blur'
+    mode: 'random'
+    mode_args:
+      max_pos_count: 1
+      max_frame_count: 3
+  -
+    var: 'zoom_blur'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 5
+      burst_pos: null

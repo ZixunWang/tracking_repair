@@ -1,10 +1,12 @@
 import os
+import time
 import shutil
-from multiprocessing import Pool
+from concurrent import futures
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 import yaml
 from easydict import EasyDict
-import numpy
+import numpy as np
 from PIL import Image
 import cv2
 
@@ -13,11 +15,27 @@ from var import var2func
 from mode import random, burst, consistent, smooth
 
 
-def process_single_image(i, o, var, severity):
-    # im = cv2.imread(str(i))
-    im = Image.open(str(i))
-    p_im = var2func[var](im, severity)
-    cv2.imwrite(str(o), p_im[:, :, ::-1])
+def process_single_sequence(task, chunk=128):
+    """Accelerate I/O and perturbation by multi-threading and multi-processing respectively"""
+    n = len(task['input'])
+    var = task['var']
+    for i in range(0, n, chunk):  # to avoid some menmory error
+        start, end = i, i+chunk if i+chunk<=n else n
+        inputs = task['input'][start:end]
+        severities = task['severity'][start:end]
+        outputs = task['output'][start:end]
+        with ThreadPoolExecutor(max_workers=20) as executor:  # io intensive
+            result_futures = map(lambda x: executor.submit(Image.open, str(x)), inputs)
+            images = [f.result() for f in futures.as_completed(result_futures)]
+
+        with ProcessPoolExecutor(max_workers=10) as executor:  # cpu intensive
+            result_futures = map(lambda x: executor.submit(var2func[var], x[0], x[1]), zip(images, severities))
+            p_images = [f.result() for f in futures.as_completed(result_futures)]
+
+        with ThreadPoolExecutor(max_workers=20) as executor:  # io intensive
+            result_futures = map(lambda x: executor.submit(cv2.imwrite, str(x[0]), x[1]), zip(outputs, p_images))
+            result = [f.result() for f in futures.as_completed(result_futures)]
+            assert np.alltrue(result), 'some error occurs when save images'
 
 
 def process_single_clip(i, o, perturb_info, logger=None):
@@ -34,30 +52,27 @@ def process_single_clip(i, o, perturb_info, logger=None):
             process_single_clip(i / x, o / x, perturb_info, logger)
 
     img_list.sort()
-    img_list = list(filter(lambda x: not (o / x).exists(), img_list)) # resume
     if len(img_list) == 0:
+        return
+    if len(list(filter(lambda x: not (o / x).exists(), img_list))) == 0:  # resume
+        if logger is not None:
+            logger.info(f'{i} has been done')
         return 
-
     severity_seq = get_severity_sequence(len(img_list), perturb_info['mode'], perturb_info['mode_args'])
-    # var_func = var2func[perturb_info['var']]
-    tasks = [(i / img_list[k], o / img_list[k], perturb_info['var'], severity_seq[k]) for k in range(len(img_list)) if not (o/img_list[k]).exists()]
+    task = {
+        'input': [i / im for im in img_list],
+        'output': [o / im for im in img_list],
+        'var': perturb_info['var'],
+        'severity': severity_seq,
+    }
 
     if logger is not None:
         logger.info(f'processing {i}...')
-
-    pool = Pool(10)
-
-    pool.starmap(process_single_image, tasks)
-    pool.close()
-    pool.join()
-
-
-def cfg_from_yaml_file(cfg_file):
-
-    with open(cfg_file, 'r') as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-    
-    return config
+    start = time.time()
+    process_single_sequence(task)
+    time_cost = time.time() - start
+    if logger is not None:
+        logger.info('sequence time consuming: {} images within {:.2f} s. {:.2f} im/s'.format(len(img_list), time_cost, len(img_list)/time_cost))
 
 def validate_perturbation(perturbations: list) -> bool:
     """Check whether the perturbation settings in the input setting list are valid.
@@ -88,7 +103,7 @@ def validate_perturbation(perturbations: list) -> bool:
         elif perturbation['mode'] == 'smooth': # order, max_level
             valid = 'order' in mode_args and 'max_level' in mode_args
         else:
-            raise ValurError('Unrecognized mode: {}'.format(perturbation['mode']))
+            raise ValueError('Unrecognized mode: {}'.format(perturbation['mode']))
         
         if not valid:
             which = idx+1

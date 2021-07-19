@@ -34,15 +34,19 @@ class MotionImage(WandImage):
 
 def clipped_zoom(img, zoom_factor):
     h = img.shape[0]
+    w = img.shape[1]
     # ceil crop height(= crop width)
     ch = int(np.ceil(h / float(zoom_factor)))
+    cw = int(np.ceil(w / float(zoom_factor)))
 
-    top = (h - ch) // 2
-    img = scizoom(img[top:top + ch, top:top + ch], (zoom_factor, zoom_factor, 1), order=1)
+    toph = (h - ch) // 2
+    topw = (w - cw) // 2
+    img = scizoom(img[toph:toph + ch, topw:topw + cw], (zoom_factor, zoom_factor, 1), order=1)
     # trim off any extra pixels
-    trim_top = (img.shape[0] - h) // 2
+    trim_toph = (img.shape[0] - h) // 2
+    trim_topw = (img.shape[1] - w) // 2
 
-    return img[trim_top:trim_top + h, trim_top:trim_top + h]
+    return img[trim_toph:trim_toph + h, trim_topw:trim_topw + w]
 
 def disk(radius, alias_blur=0.1, dtype=np.float32):
     if radius <= 8:
@@ -61,7 +65,19 @@ def disk(radius, alias_blur=0.1, dtype=np.float32):
 #---------------------------------Occlusion Perturbation
 
 def fog(x, severity=1):
-    raise Exception('No implementation error.')
+    c = [0.04, 0.05, 0.06, 0.07, 0.08][severity-1]
+    x = np.array(x, dtype=np.float32) / 255.
+    row, col, chs = x.shape
+    A = 0.5
+    size = np.sqrt(max(row, col))
+    center = (row // 2, col // 2)
+    for i in range(row):
+        for j in range(col):
+            d = -0.04 * np.sqrt((i-center[0])**2 + (j-center[1])**2) + size
+            td = np.exp(-c * d)
+            x[i][j][:] = x[i][j][:] * td + A * (1 - td)
+    x = (x * 255).astype(np.uint8)
+    return x
 
 def frost(x, severity=1):
     c = [(1, 0.4),
@@ -71,10 +87,10 @@ def frost(x, severity=1):
          (0.6, 0.75)][severity - 1]
     idx = np.random.randint(5)
     filename = [resource_filename(__name__, 'assets/frost1.png'),
-                resource_filename(__name__, 'assets/frost2.jpg'),
-                resource_filename(__name__, 'assets/frost3.png'),
-                resource_filename(__name__, 'assets/frost4.png'),
-                resource_filename(__name__, 'assets/frost5.jpg')][idx]
+                resource_filename(__name__, 'assets/frost2.png'),
+                resource_filename(__name__, 'assets/frost3.jpg'),
+                resource_filename(__name__, 'assets/frost4.jpg'),
+                resource_filename(__name__, 'assets/frost5.jpg')][0]
     # frost = cv2.imread(filename)
     # # randomly crop and convert to rgb
     # x_start, y_start = np.random.randint(0, frost.shape[0] - 224), np.random.randint(0, frost.shape[1] - 224)
@@ -82,6 +98,7 @@ def frost(x, severity=1):
 
     #NOTE construct a frost mask fitting rectangle input
     frost = PILImage.open(filename)
+    frost = frost.convert('RGB')
     frost = frost.resize(x.size, PILImage.BOX)
 
     return np.clip(c[0] * np.array(x) + c[1] * np.array(frost), 0, 255)
@@ -147,8 +164,8 @@ def snow(x, severity=1):
 
     x = np.array(x, dtype=np.float32) / 255.
     snow_layer = np.random.normal(size=x.shape[:2], loc=c[0], scale=c[1])  # [:2] for monochrome
-
     snow_layer = clipped_zoom(snow_layer[..., np.newaxis], c[2])
+    print(snow_layer.shape)
     snow_layer[snow_layer < c[3]] = 0
 
     snow_layer = PILImage.fromarray((np.clip(snow_layer.squeeze(), 0, 1) * 255).astype(np.uint8), mode='L')
@@ -157,14 +174,12 @@ def snow(x, severity=1):
     snow_layer = MotionImage(blob=output.getvalue())
 
     snow_layer.motion_blur(radius=c[4], sigma=c[5], angle=np.random.uniform(-135, -45))
-
     snow_layer = cv2.imdecode(np.fromstring(snow_layer.make_blob(), np.uint8), cv2.IMREAD_UNCHANGED) / 255.
     snow_layer = snow_layer[..., np.newaxis]
 
     #NOTE change to fit rectangle input
     # x = c[6] * x + (1 - c[6]) * np.maximum(x, cv2.cvtColor(x, cv2.COLOR_RGB2GRAY).reshape(224, 224, 1) * 1.5 + 0.5)
     x = c[6] * x + (1 - c[6]) * np.maximum(x, cv2.cvtColor(x, cv2.COLOR_RGB2GRAY).reshape(x.shape[0], x.shape[1], 1) * 1.5 + 0.5)
-
     return np.clip(x + snow_layer + np.rot90(snow_layer, k=2), 0, 1) * 255
 
 def pedestrian(x, severity=1):
@@ -247,7 +262,7 @@ def jpeg_compression(x, severity=1):
     output = BytesIO()
     x.save(output, 'JPEG', quality=c)
     x = PILImage.open(output)
-
+    x = np.array(x)
     return x
 
 def pixelate(x, severity=1):
@@ -259,7 +274,7 @@ def pixelate(x, severity=1):
     x = x.resize((int(x.width * c), int(x.height * c)), PILImage.BOX)
     x = x.resize((x.width, x.height), PILImage.BOX)
 
-    return x
+    return np.array(x)
 
 #---------------------------------Other Perturbation
 

@@ -2,6 +2,7 @@ import numpy as np
 from pytracking.evaluation.data import Sequence, BaseDataset, SequenceList
 import os
 from pytracking.utils.load_text import load_text
+from pytracking.utils.suffix import construct_suffix
 
 
 class TrackingNetDataset(BaseDataset):
@@ -15,15 +16,18 @@ class TrackingNetDataset(BaseDataset):
 
     Download the dataset using the toolkit https://github.com/SilvioGiancola/TrackingNet-devkit.
     """
-    def __init__(self):
+    def __init__(self, **kwargs):
         super().__init__()
         self.base_path = self.env_settings.trackingnet_path
 
-        sets = 'TEST'
-        if not isinstance(sets, (list, tuple)):
-            if sets == 'TEST':
-                sets = ['TEST']
-            elif sets == 'TRAIN':
+        sets = kwargs['sets']
+        if not isinstance(kwargs['sets'], (list, tuple)):
+            if sets = 'TEST':
+                if 'perturbation' in kwargs.keys():
+                    sets = ['TEST.{}'.format(construct_suffix(kwargs['perturbation']))]
+                else:
+                    sets = ['TEST']
+            else:
                 sets = ['TRAIN_{}'.format(i) for i in range(5)]
 
         self.sequence_list = self._list_sequences(self.base_path, sets)

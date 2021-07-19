@@ -1,0 +1,43 @@
+# evaluation configs example
+
+trackers: ['lwl', 'kys', 'dimp', 'atom', 'eco']
+parameters: [['lwl_ytvos','lwl_boxinit'], ['default','default_vot'], ['dimp50','dimp50_vot','dimp18','dimp18_vot','prdimp18','prdimp50','super_dimp'], ['default','default_vot','multiscale_no_iounet','atom_prob_ml','atom_gmm_sampl'],['']]
+run_id: null
+dataset: 'got10k'
+sequence: null
+debug: 0
+
+threads: 0
+
+visdom:
+  use_visdom: True
+  visdom_server: '127.0.0.1'
+  visdom_port: 8097
+
+perturb: True
+
+perturbations:
+  -
+    var: 'motion_blur'
+    mode: 'consistent'
+    mode_args:
+      severity: 2
+  -
+    var: 'motion_blur'
+    mode: 'smooth'
+    mode_args: 
+      order: 'ascending'
+      max_level: 5
+  -
+    var: 'motion_blur'
+    mode: 'burst'
+    mode_args:
+      order: 'ascending'
+      severity: 1
+      burst_pos: null
+  -
+    var: 'motion_blur'
+    mode: 'random'
+    mode_args: 
+      max_pos_count: 1
+      max_frame_count: 3
